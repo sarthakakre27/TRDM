@@ -1,0 +1,18 @@
+s 0 a b c
+a 4 d e
+b 2 g h
+c 5 o
+d 3 f
+e 4
+f 7
+g 3 i j
+h 5 j k
+i 3 j
+j 12 l m
+k 9
+l 18 n
+m 8
+n 15
+o 2 p q
+p 4
+q 6 p
