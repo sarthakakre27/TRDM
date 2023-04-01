@@ -30,6 +30,15 @@ def find_max_bid(graph, source):
             min_node = node
     return min_node
 
+def find_max_bid_util(graph):
+    # find only the node with max bid
+    max_bid = -100000
+    for node in graph.nodes:
+        if node[1] > max_bid:
+            max_bid = node[1]
+            node_name = node[0]
+    return (node_name, max_bid)
+
 # function to find the path from source to destination
 def find_path(graph, source, destination):
     # find the path from source to destination
@@ -105,6 +114,171 @@ def choose_shortest_path(shortest_paths):
         print("subgraph " + str(i))
         print(subgraphs[i].nodes)
         print("-----------------")
+
+    # find the subgraph with max bid
+    max_bid = -100000
+    max_bid_subgraph = None
+    idx  = -1
+    for i in range(len(subgraphs)):
+        node = find_max_bid_util(subgraphs[i])
+        if node[1] > max_bid:
+            max_bid = node[1]
+            max_bid_subgraph = subgraphs[i]
+            idx = i
+
+    # print(max_bid)
+    # print the shortest path of the subgraph with max bid
+    # print(shortest_paths[idx])
+
+    #destroys the subgraph
+    for graph in subgraphs:
+        graph.clear()
+        del graph
+    return shortest_paths[idx]
+
+def payment_of_winner(Graph, source, winner):
+    # create a copy of graph, but with winner and its decendants removed
+    nodes_to_remove = []
+    try:
+        decendants = nx.descendants(Graph, winner)
+        nodes_to_remove.extend(decendants)
+        nodes_to_remove.append(winner)
+    except:
+        pass
+    G = nx.DiGraph(Graph)
+    for node in nodes_to_remove:
+        try:
+            G.remove_node(node)
+        except:
+            pass
+    # print(G.nodes)
+
+    # find max bid of the subgraph
+    max_bid = -100000
+    max_bid_node = None
+    for node in G.nodes:
+        if node[1] > max_bid:
+            max_bid = node[1]
+            max_bid_node = node[0]
+    # print(max_bid_node)
+
+
+    # destroy the graph
+    G.clear()
+    del G
+    return max_bid
+
+def revenue_of_seller(Graph, shortest_path):
+    # find the child of source that is a part of the shortest path
+    target_node = None
+    for node in Graph.successors(shortest_path[0]):
+        if node in shortest_path:
+            target_node = node
+            break
+    
+    # print(target_node)
+    # make a copy of the graph with target node and its decendants removed
+    nodes_to_remove = []
+    try:
+        decendants = nx.descendants(Graph, target_node)
+        nodes_to_remove.extend(decendants)
+        nodes_to_remove.append(target_node)
+    except:
+        pass
+    G = nx.DiGraph(Graph)
+    for node in nodes_to_remove:
+        try:
+            G.remove_node(node)
+        except:
+            pass
+    # print("printing nodes of G without target node and its decendants")
+    # print(G.nodes)
+
+    # find max bid of the subgraph
+    max_bid = -100000
+    max_bid_node = None
+    for node in G.nodes:
+        if node[1] > max_bid:
+            max_bid = node[1]
+            max_bid_node = node[0]
+    # print(max_bid_node)
+
+    # destroy the graph
+    G.clear()
+    del G
+    return max_bid
+
+
+def find_referral_reward(Graph, shortest_path):
+    rewards = []
+    # for each of nodes between source and target, calculate reward
+    
+    for i in range(1, len(shortest_path)-1):
+        # create a copy of graph, but with agent and its decendants removed
+        nodes_to_remove = []
+        try:
+            decendants = nx.descendants(Graph, shortest_path[i])
+            nodes_to_remove.extend(decendants)
+            nodes_to_remove.append(shortest_path[i])
+        except:
+            pass
+        G = nx.DiGraph(Graph)
+        for node in nodes_to_remove:
+            try:
+                G.remove_node(node)
+            except:
+                pass
+        # print(G.nodes)
+        
+        # find max bid of the subgraph
+        max_bid = -100000
+        max_bid_node = None
+        for node in G.nodes:
+            if node[1] > max_bid:
+                max_bid = node[1]
+                max_bid_node = node[0]
+        # print(max_bid_node)
+        temp1 = max_bid
+
+        # destroy the graph
+        G.clear()
+        del G
+
+        # make a copy of the graph with i+1 node and its decendants removed
+        nodes_to_remove = []
+        try:
+            decendants = nx.descendants(Graph, shortest_path[i+1])
+            nodes_to_remove.extend(decendants)
+            nodes_to_remove.append(shortest_path[i+1])
+        except:
+            pass
+        G = nx.DiGraph(Graph)
+        for node in nodes_to_remove:
+            try:
+                G.remove_node(node)
+            except:
+                pass
+        # print(G.nodes)
+
+        # find max bid of the subgraph
+        max_bid = -100000
+        max_bid_node = None
+        for node in G.nodes:
+            if node[1] > max_bid:
+                max_bid = node[1]
+                max_bid_node = node[0]
+        # print(max_bid_node)
+        temp2 = max_bid
+
+        rewards.append((shortest_path[i], temp1 - temp2))
+        # destroy the graph
+        G.clear()
+        del G
+    
+    # print(rewards)
+
+    return rewards
+
 
 
 
@@ -203,6 +377,20 @@ if __name__ == '__main__':
     path = find_path(G, ('s', 0), max_bid)
     # print(path)
     # path[1][1] = ('B', 2)
-    choose_shortest_path(path)
-    # for p in path:
-    #     print(p)
+    shortest_path = choose_shortest_path(path)
+    print("shortest path: ")
+    print(shortest_path)
+    print("----------------------------------")
+    winner_payment = payment_of_winner(G, shortest_path[0], shortest_path[-1])
+    print("winner payment: ")
+    print(winner_payment)
+    print("----------------------------------")
+    seller_revenue = revenue_of_seller(G, shortest_path)
+    print("seller revenue: ")
+    print(seller_revenue)
+    print("----------------------------------")
+
+    agent_rewards = find_referral_reward(G, shortest_path)
+    print("agent rewards: ")
+    print(agent_rewards)
+    print("----------------------------------")
