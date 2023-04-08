@@ -1,6 +1,9 @@
 # from file_parser import parse_file
+import sys
+import argparse
 import networkx as nx
 import matplotlib.pyplot as plt
+from file_parser import parseFileGraphCreation
 
 # function to find node with max bid, nodes are in the form of ('node_name': str, bid: int)
 def find_max_bid(graph, source):
@@ -283,8 +286,21 @@ def find_referral_reward(Graph, shortest_path):
 
 
 if __name__ == '__main__':
-    # example graph
+    # take input file name from user in argument
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input_file", help="input file name")
+    args = parser.parse_args()
+    input_file = args.input_file
+
+    # function call to parse the file
     G = nx.DiGraph()
+    G = parseFileGraphCreation(input_file)
+
+
+
+
+    # example graph
+    # G = nx.DiGraph()
     # G.add_node(('A', 1))
     # G.add_node(('B', 2))
     # G.add_node(('C', 3))
@@ -326,45 +342,45 @@ if __name__ == '__main__':
 # o 2 p q
 # p 4
 # q 6 p
-    G.add_node(('s', 0))
-    G.add_node(('a', 4))
-    G.add_node(('b', 2))
-    G.add_node(('c', 5))
-    G.add_node(('d', 3))
-    G.add_node(('e', 4))
-    G.add_node(('f', 7))
-    G.add_node(('g', 3))
-    G.add_node(('h', 5))
-    G.add_node(('i', 3))
-    G.add_node(('j', 12))
-    G.add_node(('k', 9))
-    G.add_node(('l', 18))
-    G.add_node(('m', 8))
-    G.add_node(('n', 15))
-    G.add_node(('o', 2))
-    G.add_node(('p', 4))
-    G.add_node(('q', 6))
+    # G.add_node(('s', 0))
+    # G.add_node(('a', 4))
+    # G.add_node(('b', 2))
+    # G.add_node(('c', 5))
+    # G.add_node(('d', 3))
+    # G.add_node(('e', 4))
+    # G.add_node(('f', 7))
+    # G.add_node(('g', 3))
+    # G.add_node(('h', 5))
+    # G.add_node(('i', 3))
+    # G.add_node(('j', 12))
+    # G.add_node(('k', 9))
+    # G.add_node(('l', 18))
+    # G.add_node(('m', 8))
+    # G.add_node(('n', 15))
+    # G.add_node(('o', 2))
+    # G.add_node(('p', 4))
+    # G.add_node(('q', 6))
 
-    G.add_edge(('s', 0), ('a', 4))
-    G.add_edge(('s', 0), ('b', 2))
-    G.add_edge(('s', 0), ('c', 5))
-    G.add_edge(('a', 4), ('d', 3))
-    G.add_edge(('a', 4), ('e', 4))
-    G.add_edge(('b', 2), ('g', 3))
-    G.add_edge(('b', 2), ('h', 5))
-    G.add_edge(('c', 5), ('o', 2))
-    G.add_edge(('d', 3), ('f', 7))
-    G.add_edge(('g', 3), ('i', 3))
-    G.add_edge(('g', 3), ('j', 12))
-    G.add_edge(('h', 5), ('j', 12))
-    G.add_edge(('h', 5), ('k', 9))
-    G.add_edge(('i', 3), ('j', 12))
-    G.add_edge(('j', 12), ('l', 18))
-    G.add_edge(('j', 12), ('m', 8))
-    G.add_edge(('l', 18), ('n', 15))
-    G.add_edge(('o', 2), ('p', 4))
-    G.add_edge(('o', 2), ('q', 6))
-    G.add_edge(('q', 6), ('p', 4))
+    # G.add_edge(('s', 0), ('a', 4))
+    # G.add_edge(('s', 0), ('b', 2))
+    # G.add_edge(('s', 0), ('c', 5))
+    # G.add_edge(('a', 4), ('d', 3))
+    # G.add_edge(('a', 4), ('e', 4))
+    # G.add_edge(('b', 2), ('g', 3))
+    # G.add_edge(('b', 2), ('h', 5))
+    # G.add_edge(('c', 5), ('o', 2))
+    # G.add_edge(('d', 3), ('f', 7))
+    # G.add_edge(('g', 3), ('i', 3))
+    # G.add_edge(('g', 3), ('j', 12))
+    # G.add_edge(('h', 5), ('j', 12))
+    # G.add_edge(('h', 5), ('k', 9))
+    # G.add_edge(('i', 3), ('j', 12))
+    # G.add_edge(('j', 12), ('l', 18))
+    # G.add_edge(('j', 12), ('m', 8))
+    # G.add_edge(('l', 18), ('n', 15))
+    # G.add_edge(('o', 2), ('p', 4))
+    # G.add_edge(('o', 2), ('q', 6))
+    # G.add_edge(('q', 6), ('p', 4))
 
 
     # find the node with max bid
