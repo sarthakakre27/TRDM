@@ -33,14 +33,16 @@ def find_max_bid(graph, source):
             min_node = node
     return min_node
 
-def find_max_bid_util(graph):
+def find_max_bid_util(graph): 
     # find only the node with max bid
     max_bid = -100000
+    # print(graph.nodes,'cccccccccccc')
+    # node_name=graph.nodes[0][0]
     for node in graph.nodes:
         if node[1] > max_bid:
             max_bid = node[1]
             node_name = node[0]
-    return (node_name, max_bid)
+    return (node_name, max_bid) ############################# node_name referenced before assignment
 
 # function to find the path from source to destination
 def find_path(graph, source, destination):
@@ -76,8 +78,8 @@ def choose_shortest_path(shortest_paths):
                 first_non_match[0] = shortest_paths[0][i]
                 break
 
-    # print("first non matches")
-    # print(first_non_match)
+    print("first non matches")
+    print(first_non_match)
     # print("-----------------")
     # array of subgraphs
     subgraphs = []
@@ -141,14 +143,17 @@ def choose_shortest_path(shortest_paths):
 
 def payment_of_winner(Graph, source, winner):
     # create a copy of graph, but with winner and its decendants removed
+    print(winner)
     nodes_to_remove = []
     try:
         decendants = nx.descendants(Graph, winner)
+        print(len(decendants),'aaaaa')
         nodes_to_remove.extend(decendants)
         nodes_to_remove.append(winner)
     except:
         pass
     G = nx.DiGraph(Graph)
+    print(len(nodes_to_remove),'bbbbb')
     for node in nodes_to_remove:
         try:
             G.remove_node(node)
@@ -159,6 +164,7 @@ def payment_of_winner(Graph, source, winner):
     # find max bid of the subgraph
     max_bid = -100000
     max_bid_node = None
+    print(len(G.nodes),'ccccc')
     for node in G.nodes:
         if node[1] > max_bid:
             max_bid = node[1]
@@ -391,9 +397,9 @@ if __name__ == '__main__':
     
     # find the path from source to destination
     path = find_path(G, ('s', 0), max_bid)
-    # print(path)
+    print(path)
     # path[1][1] = ('B', 2)
-    shortest_path = choose_shortest_path(path)
+    shortest_path = choose_shortest_path(path)#[('s', 0), ('b', 11), ('f', 2), ('i', 6), ('l', 9), ('n', 12), ('p', 20)]#choose_shortest_path(path)
     print("shortest path: ")
     print(shortest_path)
     print("----------------------------------")

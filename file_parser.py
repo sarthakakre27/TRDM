@@ -68,13 +68,13 @@ def parseFileGraphCreation(input_file):
             for i in range(2,len(line)):
                 G.add_edge((line[0],atoi(node[line[0]])),(line[i],atoi(node[line[i]])))     
 
-        f.close()
+    f.close()
 
-        # print(list(G.nodes(data=True)))
-        # nx.draw(G,with_labels=True)
-        # plt.show()
+    # print(list(G.nodes(data=True)))
+    # nx.draw(G,with_labels=True)
+    # plt.show()
 
-        return G            
+    return G            
 
 
 def parseFileGraphCreation2(input_file):
